@@ -1,0 +1,89 @@
+#include "PoliceTreeOps.h"
+
+static inline PoliceTree insertByFine(PoliceTree root, PoliceTree new)
+{
+	
+	
+	PoliceTree p, prev, succ;
+	p=prev=succ = NULL;
+
+	if ( root == NULL )
+		return new;
+
+	p = root;
+
+	if(new->amount <= p->amount ) // search left tree
+		{
+				succ = p;
+				if (p->left == NULL)
+				{
+						p->left = new;
+//						new->succ = succ;
+						if(prev != NULL)
+						{
+								new->succ = prev->succ;
+								prev->succ = new;
+						}
+						else
+								new->succ=succ;
+						return root;
+				}
+				p=p-> left;
+		}
+	else if(new->amount > p->amount) // search right tree
+		{
+				prev=p;
+				if (p->right== NULL)
+				{
+						p->right = new;
+						if(prev != NULL)
+						{
+								new->succ = prev->succ;
+								prev->succ = new;
+						}
+						else
+								new->succ=succ;
+
+/*
+						new->succ = prev->succ;
+						prev->succ = new;
+*/
+						return root;
+				}
+				p=p->right;
+		}
+	return root;
+}
+
+PoliceTree reorderByFineAmount(PoliceTree root)
+{
+
+	PoliceTree p = root;
+	
+	PoliceTree ans = NULL;
+
+	PoliceTree rightMost = NULL;
+	
+	while(p->right !=NULL){
+		p=p->right;
+	}
+	rightMost = p;
+	
+	p = root;
+
+	while(p->left !=NULL){
+		p=p->left;
+	}
+
+	ans = insertByFine(ans,p);
+
+	while ( p != rightMost ){
+		
+		p = p->succ;		
+		ans = insertByFine(ans,p);
+		printf("%u\n",ans);
+	}
+
+	return ans;
+
+}

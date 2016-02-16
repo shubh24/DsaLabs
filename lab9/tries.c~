@@ -1,0 +1,129 @@
+#include<stdio.h>
+#include<limits.h>
+#include<ctype.h>
+#include<stdlib.h>
+
+typedef struct node{
+char s;
+int index[1000];
+int count;
+struct node* ptr[26];
+}node;
+
+
+int main(){
+
+
+FILE* fp = fopen("yolo.txt","r");
+char arr[1000000];
+int i = 0;
+char c;
+int max_size;
+
+while(!feof(fp)){
+	
+	c = fgetc(fp);
+	if(isalpha(c) || c == ' ' ){
+		arr[i++] = c;	
+	}
+	if ( c == '\n' )
+		arr[i++] = ' '; 
+
+}
+
+max_size = i;
+
+int index_g = 1;
+
+node* head[26];
+int k;
+for( k = 0 ; k < 26 ; k++ )
+	head[k] = NULL;
+
+for ( i = 0 ; i < max_size ; i++ ) {
+	
+	char word[20];
+	int j = 0;
+		
+	while ( arr[i] != ' ' && arr[i] != '\n' && i < max_size){
+		word[j++] = tolower(arr[i++]);		
+	}
+	
+	word[j] = '\0';	
+	printf("%s\n",word);
+
+	int x;	
+	j = 0;
+	c = word[j++];
+
+	node* temp = NULL;
+	
+	if ( head[c - 'a'] == NULL ){
+		node* new = (node*)malloc(sizeof(node));
+		new->s = c;
+		for(x = 0 ; x < 3 ; x++)
+			new->index[x] = 0;
+		new->count = 0;
+		head[c-'a'] = new;
+		temp = new;
+	}
+	
+	else{	
+		temp = head[c-'a'];
+	}
+	
+	c = word[j++];
+
+	while( c != '\0' ){
+	  if ( temp->ptr[c-'a'] == NULL){
+		node* new = (node*)malloc(sizeof(node));
+		new->s = c;
+		for(x = 0 ; x < 3 ; x++)
+			new->index[x] = 0;
+		new->count = 0;
+		for( k = 0 ; k < 26 ; k++ )
+			new->ptr[k] = NULL;
+		temp->ptr[c-'a'] = new;
+		temp = new;
+		}
+	else 
+		temp = temp->ptr[c-'a'];
+
+		c = word[j++];
+	}
+	
+	temp->index[temp->count] = index_g++;
+	temp->count++;	
+		
+
+	printf("%d\n",temp->count);
+	printf("%d\t%d\t%d\n",temp->index[0],temp->index[1],temp->index[2]);
+}	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+}
